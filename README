@@ -1,0 +1,50 @@
+Tema 1 APD - Frant Madalina 334CB
+
+In cadrul fisierului header map_reduce.h sunt definite functiile ce vor fi 
+implementate in fiserul sursa map_reduce.cpp, se defineste structura necesara 
+transmiterii parametrilor necesari functiei de thread, si se includ 
+toate librariile utilizate. 
+
+In cadrul functiei main se citesc numarul M de thread-uri mapper, numarul R 
+de thread-uri reducer si fisierul din care se va citi, cu ajutorul functiei 
+get_args. Se initializeaza map-ul folosit pentru stocarea rezultatelor partiale, 
+care are drept cheie id-ul thread-ului mapper si drept valoare un vector de 
+liste, cu semnificatia: la pozitia i din vector se afla lista numerelor care 
+sunt puteri perfecte ale lui (i + 2) (exponentii incep de la 2). Fisierele din 
+care vor citi thread-urile mapper se pun intr-o coada, pentru obtinerea facila 
+a primului element. Se initializeaza un mutex si o bariera, pentru asigurarea 
+executarii corecte a operatiilor. Se definesc argumentele date functiei de 
+thread, atribuind campului thread_id un numar de la 0 la (M + R), astfel incat 
+un id de la 0 la M sa apartina unui thread mapper, iar de la M (inclusiv) la 
+(M + R) sa apartina unui reducer. Se creeaza thread-urile cu functia de thread 
+thread_function, apoi se va astepta executia acestora. 
+
+Functia get_args citeste numarul de thread-uri mapper si reducer si fisierul 
+din care se citesc fisierele din care vor citi thread-urile mapper. 
+
+Functia thread_function executa urmatoarele: daca thread-ul curent este de tip 
+mapper, se apeleaza functia mapper pentru a realiza operatiile necesare. Apoi, 
+este implementata o bariera care asigura faptul ca operatiile corespunzatoare 
+thread-urilor de tip reducer vor incepe abia dupa finalizarea operatiilor 
+thread-urilor mapper. Dupa ce toate thread-urile au ajuns la bariera, daca 
+id-ul thread-ului curent indica un thread de tip reducer, se executa 
+operatiile necesare, apeland functia reducer. 
+
+In cadrul functiei mapper, pentru alocarea dinamica a fisierelor din care va 
+citi fiecare thread, se scoate cate un element (fisier) din coada si se executa 
+operatiile aferente, pana cand coada devine goala (s-a efectuat citirea din toate 
+fisierele). Intrucat se citeste de la si se scrie la o resursa partajata (coada), 
+se va folosi un mutex pentru a delimita aceasta zona critica. Apoi, pentru fiecare 
+valoare citita din fisier, pentru fiecare exponent (2, ... (R + 1)), se verifica 
+daca este o putere perfecta a acestui exponent, in caz pozitiv adaugand aceasta 
+valoare in lista corespunzatoare din vectorul din map de la intrarea corespunzatoare 
+id-ului thread-ului curent. 
+
+In cadrul functiei reducer se concateneaza toate listele de numere aferente 
+exponentului determinat de id-ul thread-ului, lista astfel creata fiind apoi 
+introdusa intr-un set, pentru a obtine toate elementele unice. Astfel, numarul 
+de valori unice de puteri perfecte ale exponentului curent va fi dimensiunea 
+set-ului obtinut. Acest numar va fi scris in fisierul corespunzator. 
+
+Functia is_power_of verifica daca exista un numar care, ridicat la puterea e, 
+este egal cu n, aplicand algoritmul de cautare binara. 
