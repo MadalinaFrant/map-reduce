@@ -1,5 +1,3 @@
-Tema 1 APD - Frant Madalina 334CB
-
 In cadrul fisierului header map_reduce.h sunt definite functiile ce vor fi 
 implementate in fiserul sursa map_reduce.cpp, se defineste structura necesara 
 transmiterii parametrilor necesari functiei de thread, si se includ 
@@ -48,3 +46,44 @@ set-ului obtinut. Acest numar va fi scris in fisierul corespunzator.
 
 Functia is_power_of verifica daca exista un numar care, ridicat la puterea e, 
 este egal cu n, aplicand algoritmul de cautare binara. 
+
+
+-- Implementare generica --
+
+Pentru implementarea Map-Reduce pentru orice tip de date, map-ul in care 
+vor fi stocate rezultatele partiale va avea cheia de tip int, valoarea de 
+la aceasta reprezentand rezultatele obtinute in urma aplicarii operatiilor 
+mapper pe fisierele citite de thread-ul egal cu cheia, iar valoarea va avea 
+tipul unui vector (de dimensiune R) de liste de orice tip, astfel incat 
+la index-ul i din vector se vor afla listele ce vor fi combinate de thread-ul 
+corespunzator acestui index. 
+
+Pentru ca un mapper sau un reducer sa poata realiza orice tip de operatii, 
+aplicate asupra tipurilor de date citite, functiile de mapper si reducer vor 
+mai primi inca un parametru reprezentand functia in cadrul careia se vor aplica 
+operatiile dorite. Astfel, se definesc tipurile de functii mapper_ops si 
+reducer_ops, care: mapper_ops, primind ca parametru structura de argument 
+definita si numele fisierului din care sa citeasca, va citi si prelucra 
+datele citite din acest fisier, actualizand corespunzator intrarea din map; 
+reducer_ops primeste drept parametru (pe langa structura de argument definita) 
+o lista (de orice tip) rezultata in urma combinarii rezultatelor partiale in 
+cadrul functiei reducer si aplica asupra acesteia operatiile necesare in 
+vederea obtinerii rezultatului care va fi scris in fisierul corespunzator. 
+
+Cu scopul aplicarii Map-Reduce pentru problema gasirii puterilor perfecte 
+s-au definit functiile mapper_perfect_powers si reducer_perfect_powers ce 
+realizeaza operatiile corespunzatoare acestora. 
+
+In cadrul functiei main se initializeaza map-ul cu valori de tipul vector 
+de liste de int, pentru cazul particular al problemei gasirii puterilor 
+perfecte. Structura ce va fi data drept argument este initializata cu 
+tipul de date int, astfel incat campul map al structurii sa aiba acelasi 
+tip cu map-ul definit mai devreme. Campurile opM si opR ale acestei structuri 
+vor fi initializate cu functiile definite mapper_perfect_powers si 
+reducer_perfect_powers. 
+
+Astfel, pentru aplicarea paradigmei Map-Reduce pe un alt tip de date si 
+cu alte functii de procesare din cadrul functiilor mapper si reducer, se 
+vor urma aceiasi pasi, modificand tipul de date din definitia map-ului si 
+si a structurii ce va fi data ca argument, si completand campurile functiilor 
+acestei structuri cu functiile dorite. 
